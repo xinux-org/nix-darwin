@@ -1,19 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-
-  cfg = config.system;
-
-in
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  options = {
-  };
-
   config = {
-
     system.build.applications = pkgs.buildEnv {
       name = "system-applications";
       paths = config.environment.systemPackages;
@@ -42,11 +35,10 @@ in
 
       if [ ! -e '/Applications/Nix Apps' ] \
          || ourLink '/Applications/Nix Apps'; then
-        ln -sfn ${cfg.build.applications}/Applications '/Applications/Nix Apps'
+        ln -sfn ${config.system.build.applications}/Applications '/Applications/Nix Apps'
       else
         echo "warning: /Applications/Nix Apps is not owned by nix-darwin, skipping App linking..." >&2
       fi
     '';
-
   };
 }
