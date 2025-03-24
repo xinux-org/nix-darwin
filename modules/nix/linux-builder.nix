@@ -159,7 +159,13 @@ in
     '';
   };
 
-  config = mkIf cfg.enable {
+  config = mkMerge [
+    (mkIf (!cfg.enable) {
+      system.activationScripts.preActivation.text = ''
+        rm -rf ${cfg.workingDirectory}
+      '';
+    })
+    (mkIf cfg.enable {
     assertions = [
       {
         assertion = config.nix.enable;
@@ -223,5 +229,6 @@ in
     }];
 
     nix.settings.builders-use-substitutes = true;
-  };
+    })
+  ];
 }
