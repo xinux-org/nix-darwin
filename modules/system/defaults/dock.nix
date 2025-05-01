@@ -236,13 +236,14 @@ in {
       in
         types.nullOr (types.listOf (types.coercedTo simpleType toTagged taggedType));
       default = null;
-      example = [
+      example = lib.literalExpression ''
+      [
         ./flake.nix
         "/Volumes"
         { folder = "/Users/@username@/Downloads"; }
         { folder = { path = "/Users/@username@/.emacs.d"; showas = "grid"; }; }
-        { file = "/Users/@username@/Desktop/this_is_a_file"; }
-      ];
+        { file = "/Users/@username@/Desktop/this_is_a_file"; }      
+      ]'';
       description = ''
         Persistent files, and folders in the dock.
       '';
