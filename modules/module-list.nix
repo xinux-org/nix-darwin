@@ -99,6 +99,7 @@
   ./services/yabai
   ./services/nextdns
   ./services/jankyborders
+  ./programs/_1password.nix
   ./programs/bash
   ./programs/direnv.nix
   ./programs/fish.nix
