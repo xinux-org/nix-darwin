@@ -100,6 +100,7 @@
   ./services/nextdns
   ./services/jankyborders
   ./programs/_1password.nix
+  ./programs/_1password-gui.nix
   ./programs/bash
   ./programs/direnv.nix
   ./programs/fish.nix
