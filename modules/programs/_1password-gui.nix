@@ -42,7 +42,7 @@ in
       )
 
       ${lib.getExe pkgs.rsync} "''${rsyncFlags[@]}" \
-        ${pkgs._1password-gui}/Applications/1Password.app/ /Applications/1Password.app
+        ${cfg.package}/Applications/1Password.app/ /Applications/1Password.app
     '';
   };
 }
