@@ -458,6 +458,21 @@ defaults write com.apple.HIToolbox 'AppleFnUsageType' $'<?xml version="1.0" enco
 <plist version="1.0">
 <integer>2</integer>
 </plist>'
+defaults write com.apple.iCal 'CalendarSidebarShown' $'<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<true/>
+</plist>'
+defaults write com.apple.iCal 'TimeZone support enabled' $'<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<true/>
+</plist>'
+defaults write com.apple.iCal 'first day of week' $'<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<integer>4</integer>
+</plist>'
 
 
 defaults write com.apple.screencapture 'include-date' $'<?xml version="1.0" encoding="UTF-8"?>
