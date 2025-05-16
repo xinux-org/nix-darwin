@@ -27,6 +27,7 @@ let
   dock = defaultsToList "com.apple.dock" dockFiltered;
   finder = defaultsToList "com.apple.finder" cfg.finder;
   hitoolbox = defaultsToList "com.apple.HIToolbox" cfg.hitoolbox;
+  iCal = defaultsToList "com.apple.iCal" cfg.iCal;
   magicmouse = defaultsToList "com.apple.AppleMultitouchMouse" cfg.magicmouse;
   magicmouseBluetooth = defaultsToList "com.apple.driver.AppleMultitouchMouse.mouse" cfg.magicmouse;
   screencapture = defaultsToList "com.apple.screencapture" cfg.screencapture;
@@ -37,7 +38,7 @@ let
   universalaccess = defaultsToList "com.apple.universalaccess" cfg.universalaccess;
   ActivityMonitor = defaultsToList "com.apple.ActivityMonitor" cfg.ActivityMonitor;
   WindowManager = defaultsToList "com.apple.WindowManager" cfg.WindowManager;
-  controlcenter = defaultsToList "~/Library/Preferences/ByHost/com.apple.controlcenter" cfg.controlcenter;  
+  controlcenter = defaultsToList "~/Library/Preferences/ByHost/com.apple.controlcenter" cfg.controlcenter;
   CustomUserPreferences = flatten (mapAttrsToList (name: value: defaultsToList name value) cfg.CustomUserPreferences);
   CustomSystemPreferences = flatten (mapAttrsToList (name: value: defaultsToList name value) cfg.CustomSystemPreferences);
 
@@ -83,6 +84,7 @@ in
         dock
         finder
         hitoolbox
+        iCal
         magicmouse
         magicmouseBluetooth
         screencapture
@@ -108,6 +110,7 @@ in
         ${concatStringsSep "\n" dock}
         ${concatStringsSep "\n" finder}
         ${concatStringsSep "\n" hitoolbox}
+        ${concatStringsSep "\n" iCal}
         ${concatStringsSep "\n" magicmouse}
         ${concatStringsSep "\n" magicmouseBluetooth}
         ${concatStringsSep "\n" screencapture}
