@@ -20,7 +20,7 @@ in
 
     system.build = mkOption {
       internal = true;
-      type = types.attrsOf types.unspecified;
+      type = types.lazyAttrsOf types.unspecified;
       default = {};
       description = ''
         Attribute set of derivation used to setup the system.
