@@ -1,5 +1,6 @@
 [
   ./alias.nix
+  ./config/terminfo.nix
   ./documentation
   ./meta.nix
   ./misc/ids.nix
