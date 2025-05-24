@@ -199,13 +199,9 @@ in
     environment.pathsToLink = [
       "/bin"
       "/share/locale"
-      "/share/terminfo"
     ];
 
     environment.extraInit = ''
-       # reset TERM with new TERMINFO available (if any)
-       export TERM=$TERM
-
        export NIX_USER_PROFILE_DIR="/nix/var/nix/profiles/per-user/$USER"
        export NIX_PROFILES="${concatStringsSep " " (reverseList cfg.profiles)}"
     '';
@@ -214,7 +210,6 @@ in
       {
         XDG_CONFIG_DIRS = map (path: path + "/etc/xdg") cfg.profiles;
         XDG_DATA_DIRS = map (path: path + "/share") cfg.profiles;
-        TERMINFO_DIRS = map (path: path + "/share/terminfo") cfg.profiles ++ [ "/usr/share/terminfo" ];
         EDITOR = mkDefault "nano";
         PAGER = mkDefault "less -R";
       };
