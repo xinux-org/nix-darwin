@@ -27,14 +27,6 @@ in
       '';
     };
 
-    system.path = mkOption {
-      internal = true;
-      type = types.package;
-      description = ''
-        The packages you want in the system environment.
-      '';
-    };
-
     system.profile = mkOption {
       type = types.path;
       default = "/nix/var/nix/profiles/system";
