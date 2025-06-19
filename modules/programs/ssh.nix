@@ -5,10 +5,10 @@ with lib;
 let
   cfg = config.programs.ssh;
 
-  knownHosts = map (h: getAttr h cfg.knownHosts) (attrNames cfg.knownHosts);
+  knownHosts = attrValues cfg.knownHosts;
 
   host =
-    { name, ... }:
+    { name, config, ... }:
     {
       options = {
         certAuthority = lib.mkOption {
@@ -21,10 +21,19 @@ let
         };
         hostNames = mkOption {
           type = types.listOf types.str;
-          default = [];
+          default = [ name ] ++ config.extraHostNames;
           description = ''
+            DEPRECATED, please use <literal>extraHostNames</literal>.
             A list of host names and/or IP numbers used for accessing
             the host's ssh service.
+          '';
+        };
+        extraHostNames = mkOption {
+          type = types.listOf types.str;
+          default = [];
+          description = ''
+            A list of additional host names and/or IP numbers used for
+            accessing the host's ssh service.
           '';
         };
         publicKey = mkOption {
@@ -50,9 +59,6 @@ let
             the `publicKey` option.
           '';
         };
-      };
-      config = {
-        hostNames = mkDefault [ name ];
       };
     };
   # Taken from: https://github.com/NixOS/nixpkgs/blob/f4aa6afa5f934ece2d1eb3157e392d056be01617/nixos/modules/services/networking/ssh/sshd.nix#L46-L93
@@ -132,13 +138,10 @@ in
       example = literalExpression ''
         {
           myhost = {
-            hostNames = [ "myhost" "myhost.mydomain.com" "10.10.1.4" ];
+            extraHostNames = [ "myhost.mydomain.com" "10.10.1.4" ];
             publicKeyFile = ./pubkeys/myhost_ssh_host_dsa_key.pub;
           };
-          myhost2 = {
-            hostNames = [ "myhost2" ];
-            publicKeyFile = ./pubkeys/myhost2_ssh_host_dsa_key.pub;
-          };
+          "myhost2.net".publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILIRuJ8p1Fi+m6WkHV0KWnRfpM1WxoW8XAS+XvsSKsTK";
         }
       '';
     };
@@ -151,6 +154,9 @@ in
                   (data.publicKey != null && data.publicKeyFile == null);
       message = "knownHost ${name} must contain either a publicKey or publicKeyFile";
     });
+
+    warnings = mapAttrsToList (name: _: ''programs.ssh.knownHosts.${name}.hostNames is deprecated use programs.ssh.knownHosts.${name}.extraHostNames'')
+      (filterAttrs (name: {hostNames, extraHostNames, ...}: hostNames != [ name ] ++ extraHostNames) cfg.knownHosts);
 
     environment.etc = authKeysFiles //
       { "ssh/ssh_known_hosts" = mkIf (builtins.length knownHosts > 0) {
