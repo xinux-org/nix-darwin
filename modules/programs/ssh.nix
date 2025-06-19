@@ -1,11 +1,9 @@
 { config, lib, ... }:
 
-with lib;
-
 let
   cfg = config.programs.ssh;
 
-  knownHosts = attrValues cfg.knownHosts;
+  knownHosts = builtins.attrValues cfg.knownHosts;
 
   host =
     { name, config, ... }:
@@ -19,8 +17,8 @@ let
             individual host's key.
           '';
         };
-        hostNames = mkOption {
-          type = types.listOf types.str;
+        hostNames = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
           default = [ name ] ++ config.extraHostNames;
           description = ''
             The set of system-wide known SSH hosts. To make simple setups more
@@ -31,8 +29,8 @@ let
             disabling this default.
           '';
         };
-        extraHostNames = mkOption {
-          type = types.listOf types.str;
+        extraHostNames = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
           default = [];
           description = ''
             A list of additional host names and/or IP numbers used for
@@ -40,9 +38,9 @@ let
             `hostNames` is set explicitly.
           '';
         };
-        publicKey = mkOption {
+        publicKey = lib.mkOption {
           default = null;
-          type = types.nullOr types.str;
+          type = lib.types.nullOr lib.types.str;
           example = "ecdsa-sha2-nistp521 AAAAE2VjZHN...UEPg==";
           description = ''
             The public key data for the host. You can fetch a public key
@@ -51,9 +49,9 @@ let
             the key type and the key itself.
           '';
         };
-        publicKeyFile = mkOption {
+        publicKeyFile = lib.mkOption {
           default = null;
-          type = types.nullOr types.path;
+          type = lib.types.nullOr lib.types.path;
           description = ''
             The path to the public key file for the host. The public
             key file is read at build time and saved in the Nix store.
@@ -69,8 +67,8 @@ let
   userOptions = {
 
     options.openssh.authorizedKeys = {
-      keys = mkOption {
-        type = types.listOf types.str;
+      keys = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
         description = ''
           A list of verbatim OpenSSH public keys that should be added to the
@@ -83,8 +81,8 @@ let
         '';
       };
 
-      keyFiles = mkOption {
-        type = types.listOf types.path;
+      keyFiles = lib.mkOption {
+        type = lib.types.listOf lib.types.path;
         default = [];
         description = ''
           A list of files each containing one OpenSSH public key that should be
@@ -99,29 +97,29 @@ let
   };
 
   authKeysFiles = let
-    mkAuthKeyFile = u: nameValuePair "ssh/nix_authorized_keys.d/${u.name}" {
+    mkAuthKeyFile = u: lib.nameValuePair "ssh/nix_authorized_keys.d/${u.name}" {
       text = ''
-        ${concatStringsSep "\n" u.openssh.authorizedKeys.keys}
-        ${concatMapStrings (f: readFile f + "\n") u.openssh.authorizedKeys.keyFiles}
+        ${builtins.concatStringsSep "\n" u.openssh.authorizedKeys.keys}
+        ${lib.concatMapStrings (f: builtins.readFile f + "\n") u.openssh.authorizedKeys.keyFiles}
       '';
     };
-    usersWithKeys = attrValues (flip filterAttrs config.users.users (n: u:
-      length u.openssh.authorizedKeys.keys != 0 || length u.openssh.authorizedKeys.keyFiles != 0
+    usersWithKeys = builtins.attrValues (lib.flip lib.filterAttrs config.users.users (n: u:
+      lib.length u.openssh.authorizedKeys.keys != 0 || lib.length u.openssh.authorizedKeys.keyFiles != 0
     ));
-  in listToAttrs (map mkAuthKeyFile usersWithKeys);
+  in lib.listToAttrs (map mkAuthKeyFile usersWithKeys);
 
   oldAuthorizedKeysHash = "5a5dc1e20e8abc162ad1cc0259bfd1dbb77981013d87625f97d9bd215175fc0a";
 in
 
 {
   imports = [
-    (mkRemovedOptionModule [ "services" "openssh" "authorizedKeysFiles" ] "No `nix-darwin` equivalent to this NixOS option.")
+    (lib.mkRemovedOptionModule [ "services" "openssh" "authorizedKeysFiles" ] "No `nix-darwin` equivalent to this NixOS option.")
   ];
 
   options = {
 
-    users.users = mkOption {
-      type = with types; attrsOf (submodule userOptions);
+    users.users = lib.mkOption {
+      type = with lib.types; attrsOf (submodule userOptions);
     };
 
     programs.ssh.extraConfig = lib.mkOption {
@@ -133,9 +131,9 @@ in
       '';
     };
 
-    programs.ssh.knownHosts = mkOption {
+    programs.ssh.knownHosts = lib.mkOption {
       default = {};
-      type = types.attrsOf (types.submodule host);
+      type = lib.types.attrsOf (lib.types.submodule host);
       description = ''
         The set of system-wide known SSH hosts. To make simple setups more
         convenient the name of an attribute in this set is used as a host name
@@ -144,7 +142,7 @@ in
         `extraHostNames` to add additional host names without
         disabling this default.
       '';
-      example = literalExpression ''
+      example = lib.literalExpression ''
         {
           myhost = {
             extraHostNames = [ "myhost.mydomain.com" "10.10.1.4" ];
@@ -162,18 +160,18 @@ in
 
   config = {
 
-    assertions = flip mapAttrsToList cfg.knownHosts (name: data: {
+    assertions = lib.flip lib.mapAttrsToList cfg.knownHosts (name: data: {
       assertion = (data.publicKey == null && data.publicKeyFile != null) ||
                   (data.publicKey != null && data.publicKeyFile == null);
       message = "knownHost ${name} must contain either a publicKey or publicKeyFile";
     });
 
     environment.etc = authKeysFiles //
-      { "ssh/ssh_known_hosts" = mkIf (builtins.length knownHosts > 0) {
-          text = (flip (concatMapStringsSep "\n") knownHosts
+      { "ssh/ssh_known_hosts" = lib.mkIf (builtins.length knownHosts > 0) {
+          text = (lib.flip (lib.concatMapStringsSep "\n") knownHosts
             (h: assert h.hostNames != [];
-              lib.optionalString h.certAuthority "@cert-authority " + concatStringsSep "," h.hostNames + " "
-              + (if h.publicKey != null then h.publicKey else readFile h.publicKeyFile)
+              lib.optionalString h.certAuthority "@cert-authority " + builtins.concatStringsSep "," h.hostNames + " "
+              + (if h.publicKey != null then h.publicKey else builtins.readFile h.publicKeyFile)
             )) + "\n";
         };
         "ssh/ssh_config.d/100-nix-darwin.conf".text = config.programs.ssh.extraConfig;
