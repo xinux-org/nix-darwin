@@ -23,9 +23,12 @@ let
           type = types.listOf types.str;
           default = [ name ] ++ config.extraHostNames;
           description = ''
-            DEPRECATED, please use <literal>extraHostNames</literal>.
-            A list of host names and/or IP numbers used for accessing
-            the host's ssh service.
+            The set of system-wide known SSH hosts. To make simple setups more
+            convenient the name of an attribute in this set is used as a host name
+            for the entry. This behaviour can be disabled by setting
+            `hostNames` explicitly. You can use
+            `extraHostNames` to add additional host names without
+            disabling this default.
           '';
         };
         extraHostNames = mkOption {
@@ -33,7 +36,8 @@ let
           default = [];
           description = ''
             A list of additional host names and/or IP numbers used for
-            accessing the host's ssh service.
+            accessing the host's ssh service. This list is ignored if
+            `hostNames` is set explicitly.
           '';
         };
         publicKey = mkOption {
@@ -133,7 +137,12 @@ in
       default = {};
       type = types.attrsOf (types.submodule host);
       description = ''
-        The set of system-wide known SSH hosts.
+        The set of system-wide known SSH hosts. To make simple setups more
+        convenient the name of an attribute in this set is used as a host name
+        for the entry. This behaviour can be disabled by setting
+        `hostNames` explicitly. You can use
+        `extraHostNames` to add additional host names without
+        disabling this default.
       '';
       example = literalExpression ''
         {
@@ -142,6 +151,10 @@ in
             publicKeyFile = ./pubkeys/myhost_ssh_host_dsa_key.pub;
           };
           "myhost2.net".publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILIRuJ8p1Fi+m6WkHV0KWnRfpM1WxoW8XAS+XvsSKsTK";
+          "myhost2.net/dsa" = {
+            hostNames = [ "myhost2.net" ];
+            publicKeyFile = ./pubkeys/myhost2_ssh_host_dsa_key.pub;
+          };
         }
       '';
     };
@@ -154,9 +167,6 @@ in
                   (data.publicKey != null && data.publicKeyFile == null);
       message = "knownHost ${name} must contain either a publicKey or publicKeyFile";
     });
-
-    warnings = mapAttrsToList (name: _: ''programs.ssh.knownHosts.${name}.hostNames is deprecated use programs.ssh.knownHosts.${name}.extraHostNames'')
-      (filterAttrs (name: {hostNames, extraHostNames, ...}: hostNames != [ name ] ++ extraHostNames) cfg.knownHosts);
 
     environment.etc = authKeysFiles //
       { "ssh/ssh_known_hosts" = mkIf (builtins.length knownHosts > 0) {
