@@ -1,10 +1,17 @@
-[<img src="https://github.com/user-attachments/assets/0e1a77ac-6739-4153-bd24-abd3a5e143f5" width="200px" alt="logo" />](https://github.com/nix-darwin/nix-darwin)
+<p align="center">
+    <img src=".github/assets/header.png" alt="Nix Darwin's {Modules}">
+</p>
 
-# nix-darwin
+<p align="center">
+    <h3 align="center">Nix modules for darwin, `/etc/nixos/configuration.nix` for macOS.</h3>
+</p>
 
-[![Test](https://github.com/nix-darwin/nix-darwin/actions/workflows/test.yml/badge.svg)](https://github.com/nix-darwin/nix-darwin/actions/workflows/test.yml)
+<p align="center">
+    <img align="center" src="https://img.shields.io/github/languages/top/xinux-org/nix-darwin?style=flat&logo=nixos&logoColor=5277C3&labelColor=ffffff&color=ffffff" alt="Top Used Language">
+    <a href="https://github.com/xinux-org/nix-darwin/actions/workflows/test.yml"><img align="center" src="https://img.shields.io/github/actions/workflow/status/xinux-org/nix-darwin/test.yml?style=flat&label=update%20(darwinpkgs)&logo=github&logoColor=5277C3&labelColor=ffffff&color=ffffff" alt="Test CI"></a>
+</p>
 
-Nix modules for darwin, `/etc/nixos/configuration.nix` for macOS.
+## About
 
 This project aims to bring the convenience of a declarative system approach to macOS.
 nix-darwin is built up around [Nixpkgs](https://github.com/NixOS/nixpkgs), quite similar to [NixOS](https://nixos.org/).
@@ -15,18 +22,15 @@ The only prerequisite is a Nix implementation; both Nix and Lix are supported.
 
 As the official Nix installer does not include an automated uninstaller, and manual uninstallation on macOS is a complex process, we recommend using one of the following installers instead:
 
-* The [Nix installer from Determinate Systems](https://github.com/DeterminateSystems/nix-installer?tab=readme-ov-file#determinate-nix-installer) is only recommended for use with flake-based setups.
+- The [Nix installer from Determinate Systems](https://github.com/DeterminateSystems/nix-installer?tab=readme-ov-file#determinate-nix-installer) is only recommended for use with flake-based setups.
   It can install one of two distributions of Nix:
+  - To install the **recommended** vanilla upstream [Nix](https://nixos.org), you will need to explicitly say `no` when prompted to install `Determinate Nix`.
 
-  * To install the **recommended** vanilla upstream [Nix](https://nixos.org), you will need to explicitly say `no` when prompted to install `Determinate Nix`.
-
-  * When run with the `--determinate` flag, it will install the [Determinate](https://docs.determinate.systems/) distribution.
+  - When run with the `--determinate` flag, it will install the [Determinate](https://docs.determinate.systems/) distribution.
     As Determinate manages the Nix installation itself, you will need to set `nix.enable = false;` in your configuration to disable nix-darwin’s own Nix management.
     Some nix-darwin functionality that relies on managing the Nix installation, like the `nix.*` options to adjust Nix settings or configure a Linux builder, will be unavailable.
 
-* The [Lix installer](https://lix.systems/install/#on-any-other-linuxmacos-system) supports both flake-based and channel-based setups.
-
-
+- The [Lix installer](https://lix.systems/install/#on-any-other-linuxmacos-system) supports both flake-based and channel-based setups.
 
 ## Getting started
 
@@ -73,8 +77,8 @@ Add the following to `flake.nix` in the same folder as `configuration.nix`:
   inputs = {
     # Use `github:NixOS/nixpkgs/nixpkgs-25.05-darwin` to use Nixpkgs 25.05.
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    # Use `github:nix-darwin/nix-darwin/nix-darwin-25.05` to use Nixpkgs 25.05.
-    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    # Use `github:xinux-org/nix-darwin/nix-darwin-25.05` to use Nixpkgs 25.05.
+    nix-darwin.url = "github:xinux-org/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -98,9 +102,9 @@ Unlike NixOS, `nix-darwin` does not have an installer, you can just run `darwin-
 
 ```bash
 # To use Nixpkgs unstable:
-sudo nix run nix-darwin/master#darwin-rebuild -- switch
+sudo nix run github:xinux-org/nix-darwin/master#darwin-rebuild -- switch
 # To use Nixpkgs 25.05:
-sudo nix run nix-darwin/nix-darwin-25.05#darwin-rebuild -- switch
+sudo nix run github:xinux-org/nix-darwin/nix-darwin-25.05#darwin-rebuild -- switch
 ```
 
 ### Step 3. Using `nix-darwin`
@@ -129,6 +133,7 @@ nix-darwin.lib.darwinSystem {
 { pkgs, lib, inputs }:
 # inputs.self, inputs.nix-darwin, and inputs.nixpkgs can be accessed here
 ```
+
 </details>
 
 <details>
@@ -142,9 +147,9 @@ Copy the [simple](./modules/examples/simple.nix) example to `/etc/nix-darwin/con
 
 ```bash
 # If you use Nixpkgs unstable (the default):
-sudo nix-channel --add https://github.com/nix-darwin/nix-darwin/archive/master.tar.gz darwin
+sudo nix-channel --add https://github.com/xinux-org/nix-darwin/archive/master.tar.gz darwin
 # If you use Nixpkgs 25.05:
-sudo nix-channel --add https://github.com/nix-darwin/nix-darwin/archive/nix-darwin-25.05.tar.gz darwin
+sudo nix-channel --add https://github.com/xinux-org/nix-darwin/archive/nix-darwin-25.05.tar.gz darwin
 
 sudo nix-channel --update
 ```
@@ -173,11 +178,12 @@ You can update Nixpkgs and `nix-darwin` using the following command:
 ```bash
 sudo nix-channel --update
 ```
+
 </details>
 
 ## Documentation
 
-`darwin-help` will open up a local copy of the reference documentation, it can also be found online [here](https://nix-darwin.github.io/nix-darwin/manual/index.html).
+`darwin-help` will open up a local copy of the reference documentation, it can also be found online [here](https://nix-darwin.uz/manual/stable/).
 
 The documentation is also available as manpages by running `man 5 configuration.nix`.
 
@@ -235,5 +241,11 @@ The `or` operator takes care of graceful degradation when `lib` from Nixpkgs
 goes out of sync.
 
 Feel free to contact us on Matrix if you have questions:
-* **User support:** [#macos:nixos.org](https://matrix.to/#/#macos:nixos.org)
-* **Development discussion:** [#nix-darwin-dev:nixos.org](https://matrix.to/#/#nix-darwin-dev:nixos.org)
+
+- **User support:** [#macos:nixos.org](https://matrix.to/#/#macos:nixos.org) or
+
+- **Development discussion:** [#nix-darwin-dev:nixos.org](https://matrix.to/#/#nix-darwin-dev:nixos.org)
+
+<p align="center">
+    <img src=".github/assets/footer.png" alt="Nix Darwin's {Modules}">
+</p>
