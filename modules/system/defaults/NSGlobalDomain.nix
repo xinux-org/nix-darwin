@@ -52,6 +52,19 @@ in {
       '';
     };
 
+    system.defaults.NSGlobalDomain.AppleIconAppearanceTheme = mkOption {
+      type = types.nullOr (types.enum [ "DarkRegular" "DarkAutomatic" "ClearLight" "Clear Dark" "Clear Automatic" "TintedLight" "TintedDark" "TintedAutomatic" ]);
+      default = null;
+      description = ''
+        Set icon and widget style
+
+        To set to default mode, set this to `null` and you'll need to manually run
+        {command}`defaults delete -g AppleIconAppearanceTheme`.
+
+        This option requires logging out and logging back in to apply.
+      '';
+    };
+
     system.defaults.NSGlobalDomain.AppleInterfaceStyleSwitchesAutomatically = mkOption {
       type = types.nullOr types.bool;
       default = null;
