@@ -53,7 +53,7 @@ in {
     };
 
     system.defaults.NSGlobalDomain.AppleIconAppearanceTheme = mkOption {
-      type = types.nullOr (types.enum [ "DarkRegular" "DarkAutomatic" "ClearLight" "Clear Dark" "Clear Automatic" "TintedLight" "TintedDark" "TintedAutomatic" ]);
+      type = types.nullOr (types.enum [ "RegularDark" "RegularAutomatic" "ClearLight" "ClearDark" "ClearAutomatic" "TintedLight" "TintedDark" "TintedAutomatic" ]);
       default = null;
       description = ''
         Set icon and widget style
