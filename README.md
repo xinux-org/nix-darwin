@@ -16,6 +16,8 @@
 This project aims to bring the convenience of a declarative system approach to macOS.
 nix-darwin is built up around [Nixpkgs](https://github.com/NixOS/nixpkgs), quite similar to [NixOS](https://nixos.org/).
 
+> Howdy [Emily](https://github.com/emilazy), how it feels to ditch people?
+
 ## Prerequisites
 
 The only prerequisite is a Nix implementation; both Nix and Lix are supported.
