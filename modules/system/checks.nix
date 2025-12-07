@@ -10,10 +10,9 @@ let
 
   macOSVersion = ''
     IFS=. read -ra osVersion <<<"$(sw_vers -productVersion)"
-    if (( osVersion[0] < 11 || (osVersion[0] == 11 && osVersion[1] < 3) )); then
-      printf >&2 '\e[1;31merror: macOS version is less than 11.3, aborting activation\e[0m\n'
-      printf >&2 'Nixpkgs 25.05 requires macOS Big Sur 11.3 or newer, and 25.11 will\n'
-      printf >&2 'require macOS Sonoma 14.\n'
+    if (( osVersion[0] < 14 )); then
+      printf >&2 '\e[1;31merror: macOS version is less than 14.0, aborting activation\e[0m\n'
+      printf >&2 'Nixpkgs 25.11 requires macOS Sonoma 14.0 or newer.\n'
       printf >&2 '\n'
       printf >&2 'For more information on your options going forward, see the 25.05\n'
       printf >&2 'release notes:\n'
