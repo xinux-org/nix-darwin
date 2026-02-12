@@ -28,7 +28,13 @@ As the official Nix installer does not include an automated uninstaller, and man
   It can install one of two distributions of Nix:
   - To install the **recommended** vanilla upstream [Nix](https://nixos.org), you will need to explicitly say `no` when prompted to install `Determinate Nix`.
 
+<<<<<<< HEAD
   - When run with the `--determinate` flag, it will install the [Determinate](https://docs.determinate.systems/) distribution.
+=======
+  * To install the **recommended** vanilla upstream [Nix](https://nixos.org), you will need to explicitly pass the `--prefer-upstream-nix` flag to the installer.
+
+  * When run without the `--prefer-upstream-nix` flag, it will install the [Determinate](https://docs.determinate.systems/) distribution.
+>>>>>>> e9bf5c5 (readme: update determinate installer instructions)
     As Determinate manages the Nix installation itself, you will need to set `nix.enable = false;` in your configuration to disable nix-darwin’s own Nix management.
     Some nix-darwin functionality that relies on managing the Nix installation, like the `nix.*` options to adjust Nix settings or configure a Linux builder, will be unavailable.
 
